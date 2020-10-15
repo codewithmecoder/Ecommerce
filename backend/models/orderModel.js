@@ -7,7 +7,7 @@ const orderSchema = mongoose.Schema(
       required: true,
       ref: "User",
     },
-    orderItem: [
+    orderItems: [
       {
         name: { type: String, required: true },
         qty: { type: Number, required: true },
@@ -64,7 +64,7 @@ const orderSchema = mongoose.Schema(
       required: true,
       default: false,
     },
-    DeliveredAt: {
+    deliveredAt: {
       type: Date,
     },
   },
@@ -74,4 +74,5 @@ const orderSchema = mongoose.Schema(
 );
 
 const Order = mongoose.model("Order", orderSchema);
+
 export default Order;
