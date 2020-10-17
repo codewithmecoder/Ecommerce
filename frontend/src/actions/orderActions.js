@@ -19,6 +19,7 @@ import {
   ORDER_PAY_REQUEST,
   ORDER_PAY_SUCCESS,
 } from "../constants/orderConstants";
+import { logout } from "../actions/userActions";
 
 export const createOrder = (order) => async (dispatch, getState) => {
   try {
@@ -122,14 +123,16 @@ export const payOrder = (orderId, paymentResult) => async (
   }
 };
 
-export const deliverOrder = (orderId) => async (dispatch, getState) => {
+export const deliverOrder = (order) => async (dispatch, getState) => {
   try {
     dispatch({
       type: ORDER_DELIVER_REQUEST,
     });
+
     const {
       userLogin: { userInfo },
     } = getState();
+
     const config = {
       headers: {
         Authorization: `Bearer ${userInfo.token}`,
@@ -137,7 +140,7 @@ export const deliverOrder = (orderId) => async (dispatch, getState) => {
     };
 
     const { data } = await axios.put(
-      `/api/orders/${orderId._id}/deliver`,
+      `/api/orders/${order._id}/deliver`,
       {},
       config
     );
@@ -147,12 +150,16 @@ export const deliverOrder = (orderId) => async (dispatch, getState) => {
       payload: data,
     });
   } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    if (message === "Not authorized, token failed") {
+      dispatch(logout());
+    }
     dispatch({
       type: ORDER_DELIVER_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
+      payload: message,
     });
   }
 };

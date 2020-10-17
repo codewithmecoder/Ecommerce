@@ -80,7 +80,7 @@ const OrderScreen = ({ match, history }) => {
   };
 
   const deliverHandler = () => {
-    dispatch(deliverOrder(orderId));
+    dispatch(deliverOrder(order));
   };
 
   return loading ? (
