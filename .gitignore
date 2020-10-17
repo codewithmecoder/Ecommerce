@@ -10,7 +10,7 @@ node_modules/
 /coverage
 
 # production
-/build
+/forntend/build
 
 # misc
 .DS_Store
